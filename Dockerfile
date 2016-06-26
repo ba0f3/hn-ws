@@ -7,11 +7,10 @@ ADD requirements.txt /app/
 WORKDIR /app
 EXPOSE 8000
 
-RUN apk add --update python py-pip 
+RUN apk add --update python python-dev py-pip gcc musl-dev libxml2-dev libxslt-dev
 RUN rm -rf /var/cache/apk/*
-
 RUN pip install -r requirements.txt
 
-ENTRYPOINT ["gunicorn", "app", "-w 2", "-b :8000"]
+ENTRYPOINT ["gunicorn", "-w 4", "-b :8000", "app"]
 
 

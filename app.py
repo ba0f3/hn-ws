@@ -3,10 +3,10 @@ from flask import Flask, request, jsonify, make_response
 from readability.readability import Document
 import requests
 
-app = Flask(__name__)
+application = Flask(__name__)
 
 
-@app.route("/")
+@application.route("/")
 def hello():
     id = request.args.get('id', '')
     url = request.args.get('url', '')
@@ -39,4 +39,4 @@ def hello():
     return resp
 
 if __name__ == "__main__":
-    app.run(debug=True, use_reloader=True)
+    application.run(debug=True, use_reloader=True)
