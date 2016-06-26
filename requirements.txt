@@ -1,0 +1,3 @@
+flask
+readability-lxml
+requests
