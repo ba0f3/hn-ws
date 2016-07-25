@@ -1,40 +1,33 @@
 from flask import Flask, request, jsonify, make_response
 from werkzeug.contrib.cache import MemcachedCache
 
-from readability.readability import Document
-import requests
+#from readability.readability import Document
+#import requests
+from readability import ParserClient
 
 application = Flask(__name__)
 
 cache = MemcachedCache(['memcache:11211'])
-
+parser_client = ParserClient()
 
 @application.route("/")
 def hello():
     id = request.args.get('id', '')
     url = request.args.get('url', '')
 
+
+
     result = cache.get(id)
     if result is None:
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safa,ri/537.36',
-            'Referer': 'https://news.ycombinator.com/item?id=' + id,
-            'Origin': 'https://news.ycombinator.com/item?id=' + id
-        }
         try:
-            ret = requests.get(url, headers=headers)
-            doc = Document(ret.content, url=url)
-            result = {
-                "url": url,
-                "title": doc.short_title(),
-                "summary": doc.summary(True)
-            }
+            parser_response = parser_client.get_article(url)
+            result = parser_response.json()
         except:
             result = {
-                "url": url,
                 "title": "Error",
-                "summary": "<h3>Unable to fetch article's content!</h3>"
+                "content": "<h3>Unable to fetch article's content!</h3>",
             }
+        result['summary'] = '<h3>You are using the out-dated Hacker News app, please update to latest version!</h3>'
         cache.set(id, result)
 
     resp = make_response(jsonify(result), 200)

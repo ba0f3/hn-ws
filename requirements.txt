@@ -1,4 +1,4 @@
 flask
-readability-lxml
-requests
+readability-api
 gunicorn
+python-memcached
