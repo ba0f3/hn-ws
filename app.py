@@ -22,7 +22,8 @@ def hello():
         try:
             parser_response = parser_client.get_article(url)
             result = parser_response.json()
-        except:
+        except Exception as e:
+            print e
             result = {
                 "title": "Error",
                 "content": "<h3>Unable to fetch article's content!</h3>",
